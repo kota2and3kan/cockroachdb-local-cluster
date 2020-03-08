@@ -850,7 +850,7 @@ Usage:
 Examples:
 
   1. Create Secure Cluster:
-     Ex: sudo ./cockroachdb-local-cluster create 9
+     Ex: sudo ./cockroachdb-local-cluster.sh create 9
 
        Note: If you don't specify the number of cockroaches, the default value is 3.
 
@@ -859,7 +859,7 @@ Examples:
 
 
   2. Create Insecure Cluster:
-     Ex: sudo ./cockroachdb-local-cluster create insecure 9
+     Ex: sudo ./cockroachdb-local-cluster.sh create insecure 9
 
        Note: If you don't specify the number of cockroaches, the default value is 3.
 
@@ -868,14 +868,14 @@ Examples:
 
 
   3. Delete Cluster:
-     Ex: sudo ./cockroachdb-local-cluster delete
+     Ex: sudo ./cockroachdb-local-cluster.sh delete
 
        Note: Basically, you don't need to specify the number of cockroaches, because this script will get it from status file.
              If some failure occur and you want to force the delete processes, specify the "force" and the number of cockroaches.
 
 
   4. Force Delete Cluster:
-     Ex: sudo ./cockroachdb-local-cluster delete force 9
+     Ex: sudo ./cockroachdb-local-cluster.sh delete force 9
 
        Note: \"delete force\" will kill and remove the following containers and docker network.
              Please check the each resources after \"delete force\" processes by using the following commands.
