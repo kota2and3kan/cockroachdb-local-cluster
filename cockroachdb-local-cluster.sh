@@ -681,7 +681,7 @@ delete() {
 	if [ $? != 0 ]; then
 		echo -e "ERROR: docker kill ${RESOURCE_NAME}-client failed." 1>&2
 		echo -e "       *** Please check the status of each container by \"docker container ls -a\" command. " 1>&2
-		echo -e "       *** If there are any failed container, please kill and remove them manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
+		echo -e "       *** If there are any failed container, please kill and remove it manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
 		echo -e "       ***   There is a possibility that the following container exists at this step.\n"
 		echo -e "       ***   ${RESOURCE_NAME}-client\n" 1>&2
 		RETURN=1
@@ -692,7 +692,7 @@ delete() {
 	if [ $? != 0 ]; then
 		echo -e "ERROR: docker rm ${RESOURCE_NAME}-client failed." 1>&2
 		echo -e "       *** Please check the status of each container by \"docker container ls -a\" command. " 1>&2
-		echo -e "       *** If there are any failed container, please kill and remove them manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
+		echo -e "       *** If there are any failed container, please kill and remove it manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
 		echo -e "       ***   There is a possibility that the following container exists at this step.\n"
 		echo -e "       ***   ${RESOURCE_NAME}-client\n" 1>&2
 		RETURN=1
@@ -706,7 +706,7 @@ delete() {
 		echo -e "       *** Please check the status of docker network by \"docker network ls\" command. " 1>&2
 		echo -e "       *** If does the \"${RESOURCE_NAME}-net\" exist, please remove it manually by \"docker network rm\" command.\n" 1>&2
 		echo -e "       ***   There is a possibility that the following docker network exists at this step.\n"
-		echo -e "       ***   ${RESOURCE_NAME}-client\n" 1>&2
+		echo -e "       ***   ${RESOURCE_NAME}-net\n" 1>&2
 		RETURN=1
 		exit ${RETURN}
 	fi
@@ -755,7 +755,7 @@ force() {
 			echo -e "           ***   ${RESOURCE_NAME}-4, ${RESOURCE_NAME}-5, ${RESOURCE_NAME}-6" 1>&2
 			echo -e "           ***   ${RESOURCE_NAME}-7, ${RESOURCE_NAME}-8, ${RESOURCE_NAME}-9" 1>&2
 			echo -e "           ***   ${RESOURCE_NAME}-client\n" 1>&2
-			echo -e "           *** Docker network (you can check them by \"docker network ls\" command)."
+			echo -e "           *** Docker network (you can check it by \"docker network ls\" command)."
 			echo -e "           ***   There is a possibility that the following docker network exists.\n"
 			echo -e "           ***   ${RESOURCE_NAME}-net\n" 1>&2
 			;;
@@ -884,7 +884,7 @@ Examples:
                 ${RESOURCE_NAME}-7, ${RESOURCE_NAME}-8, ${RESOURCE_NAME}-9
                 ${RESOURCE_NAME}-client
 
-              Docker network (you can check them by \"docker network ls\" command).
+              Docker network (you can check it by \"docker network ls\" command).
               There is a possibility that the following docker network exists.
                 ${RESOURCE_NAME}-net
 	"
