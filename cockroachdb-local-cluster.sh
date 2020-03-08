@@ -733,8 +733,8 @@ delete() {
 	echo -e "\n*** Deleting CockroachDB Local Cluster done ***\n"
 	echo -e "INFO: You can re-create the cluster with DB DATA of deleted cluster (you can re-use deleted cluster's DATA), if you want re-use old DATA, re-run this script with "create" option."
 	echo -e "  Ex: sudo ./cockroachdb-local-cluster.sh create\n"
-	echo -e "INFO: If you don't need the DB DATA of deleted cluster, remove the ./${WORK_DIR_RELATIVE_PATH} dir manually."
-	echo -e "  Ex: sudo rm -rf ./${WORK_DIR_RELATIVE_PATH}\n"
+	echo -e "INFO: If you don't need the DB DATA of deleted cluster, remove the ./${WORK_DIR_RELATIVE_PATH}/ dir manually."
+	echo -e "  Ex: sudo rm -rf ./${WORK_DIR_RELATIVE_PATH}/\n"
 
 	exit ${RETURN}
 }
@@ -825,8 +825,8 @@ force() {
 	echo -e "\n*** *FORCE* Deleting CockroachDB Local Cluster done ***\n"
 	echo -e "INFO: You can re-create the cluster with DB DATA of deleted cluster (you can re-use deleted cluster's DATA), if you want re-use old DATA, re-run this script with "create" option."
 	echo -e "  Ex: sudo ./cockroachdb-local-cluster.sh create\n"
-	echo -e "INFO: If you don't need the DB DATA of deleted cluster, remove the ./${WORK_DIR_RELATIVE_PATH} dir manually."
-	echo -e "  Ex: sudo rm -rf ./${WORK_DIR_RELATIVE_PATH}\n"
+	echo -e "INFO: If you don't need the DB DATA of deleted cluster, remove the ./${WORK_DIR_RELATIVE_PATH}/ dir manually."
+	echo -e "  Ex: sudo rm -rf ./${WORK_DIR_RELATIVE_PATH}/\n"
 
 	exit ${RETURN}
 }
