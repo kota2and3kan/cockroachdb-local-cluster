@@ -560,9 +560,6 @@ create() {
 		# If it is a Secure Cluster, you cannot access Web UI as a root, you need access as a non-root user with password authentication.
 		echo -e "\n  Access Web UI as a non-root user (user name: ${NON_ROOT_USER_NAME} / password: ${NON_ROOT_USER_PASSWORD}):"
 		echo -e "    URL: https://${HTTP_IP}:$(expr ${HTTP_PORT} - ${COCKROACH_NUM})/"
-		echo -e "    Note: You need password authentication."
-		echo -e "          user     : ${NON_ROOT_USER_NAME}"
-		echo -e "          password : ${NON_ROOT_USER_PASSWORD}"
 	fi
 	echo -e ""
 
