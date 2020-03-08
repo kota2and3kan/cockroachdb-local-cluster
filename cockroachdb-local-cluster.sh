@@ -838,8 +838,8 @@ help() {
 Deploy the swarm of cockroaches on your local environment with Docker.
 
 Usage:
-  sudo ./cockroachdb-local-cluster.sh create {insecure} [number_of_cockroaches]
-  sudo ./cockroachdb-local-cluster.sh delete {force} [number_of_cockroaches]
+  sudo ./cockroachdb-local-cluster.sh create [insecure] [number_of_cockroaches]
+  sudo ./cockroachdb-local-cluster.sh delete [force number_of_cockroaches]
 
     Note: The max number of cockroaches of this script (number_of_cockroaches) is 9.
 
