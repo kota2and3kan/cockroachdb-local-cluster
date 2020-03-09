@@ -392,10 +392,6 @@ create() {
 		done
 	done
 
-	# Wait for 3 second just in case, for complete to initialization of the cluster.
-	sleep 3
-
-
 	# Create status file. It includes "Running" and ${COCKROACH_NUM}.
 	# The information of ${COCKROACH_NUM} will be used in the delete processes.
 	touch ${STATUS_FILE}
@@ -418,6 +414,32 @@ create() {
 		RETURN=1
 		exit ${RETURN}
 	fi
+
+	# Wait for the CockroachDB will be ready to accept connections.
+	echo -e "INFO: Waiting for CockroachDB is ready to acccept connections."
+	for i in `seq 10`; do
+		sleep 3
+		# Even if try to connect to DB 10 times (even if waiting about 30 second), if the DB will not be ready to accept connections, exit this script with return value 1.
+		if [ ${i} -eq 10 ]; then
+			echo -e "ERROR: CockroachDB was NOT ready to accept connections, even if try to connect to DB 10 times (even if waiting about 30 second)." 1>&2
+			echo -e "HINT: There is possibility that some error occurred. Please check the DB or Container log." 1>&2
+			RETURN=1
+			exit ${RETURN}
+		# Check if the DB is accessible or not, by using "SELECT 1".
+		else
+			docker exec ${RESOURCE_NAME}-client \
+				./cockroach sql \
+				${SECURE_FLAG} \
+				--host=${RESOURCE_NAME}-1:26257 \
+				-e "SELECT 1" > /dev/null
+			if [ $? -eq 0 ];then
+				echo -e "INFO: CockroachDB is ready to accept connections."
+				break
+			elif [ $? -ne 0 ]; then
+				echo -e "INFO: CockroachDB is NOT ready to accept connections."
+			fi
+		fi
+	done
 
 	echo -e "INFO: Creating cluster done."
 
