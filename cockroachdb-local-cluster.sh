@@ -159,7 +159,7 @@ create() {
 		# Create CA dir.
 		echo -e "INFO: Creating ${CERT_DIR} and sub directories."
 		mkdir -p ${CERT_DIR}/certs ${CERT_DIR}/my-safe-directory
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: mkdir -p ${CERT_DIR}/certs ${CERT_DIR}/my-safe-directory failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
@@ -168,7 +168,7 @@ create() {
 		# Create cert dir of each cockroach.
 		for i in `seq ${COCKROACH_NUM}`; do
 			mkdir -p ${CERT_DIR}/${RESOURCE_NAME}-${i}
-			if [ $? != 0 ]; then
+			if [ $? -ne 0 ]; then
 				echo -e "ERROR: mkdir -p ${CERT_DIR}/${RESOURCE_NAME}-${i} failed." 1>&2
 				RETURN=1
 				exit ${RETURN}
@@ -181,7 +181,7 @@ create() {
 	echo -e "INFO: Create Docker Network ${RESOURCE_NAME}-net."
 	docker network create -d bridge ${RESOURCE_NAME}-net \
 		-o "com.docker.network.bridge.name"="${RESOURCE_NAME}-net"
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: docker network create -d bridge ${RESOURCE_NAME}-net failed." 1>&2
 		echo -e "HINT: Please check the docker network by \"docker network ls\" command." 1>&2
 		echo -e "      If the ${RESOURCE_NAME}-net exists, please remove it manually." 1>&2
@@ -201,7 +201,7 @@ create() {
 		--entrypoint tail \
 		${IMAGE}:${VERSION} \
 		-f /dev/null
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: docker run -d --name=${RESOURCE_NAME}-client... failed." 1>&2
 		echo -e "HINT: Please check the status of container by \"docker container ls -a\" command." 1>&2
 		echo -e "      If the ${RESOURCE_NAME}-client container exists, please remove it manually." 1>&2
@@ -220,7 +220,7 @@ create() {
 			--ca-key=/cockroach/.setup/my-safe-directory/ca.key \
 			--allow-ca-key-reuse \
 			--overwrite
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach cert create-ca... failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
@@ -233,14 +233,14 @@ create() {
 				--certs-dir=/cockroach/.setup/certs \
 				--ca-key=/cockroach/.setup/my-safe-directory/ca.key \
 				--overwrite
-			if [ $? != 0 ]; then
+			if [ $? -ne 0 ]; then
 				echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach cert create-node ${RESOURCE_NAME}-${i}... failed." 1>&2
 				RETURN=1
 				exit ${RETURN}
 			fi
 
 			cp ${CERT_DIR}/certs/* ${CERT_DIR}/${RESOURCE_NAME}-${i}/
-			if [ $? != 0 ]; then
+			if [ $? -ne 0 ]; then
 				echo -e "ERROR: cp ${CERT_DIR}/certs/* ${CERT_DIR}/${RESOURCE_NAME}-${i}/ failed." 1>&2
 				RETURN=1
 				exit ${RETURN}
@@ -253,21 +253,21 @@ create() {
 			--certs-dir=/cockroach/.setup/certs \
 			--ca-key=/cockroach/.setup/my-safe-directory/ca.key \
 			--overwrite
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: docker exec ${RESOURCCE_NAME}-client ./cockroach cert create-client root... failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
 		fi
 
 		mv ${CERT_DIR}/certs/client.root.* ${CERT_DIR}/${RESOURCE_NAME}-client/
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: mv ${CERT_DIR}/certs/client.root.* ${CERT_DIR}/${RESOURCE_NAME}-client/ failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
 		fi
 
 		cp ${CERT_DIR}/${RESOURCE_NAME}-1/* ${CERT_DIR}/${RESOURCE_NAME}-client/
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: cp ${CERT_DIR}/${RESOURCE_NAME}-1/* ${CERT_DIR}/${RESOURCE_NAME}-client/" 1>&2
 			RETURN=1
 			exit ${RETURN}
@@ -282,7 +282,7 @@ create() {
 	echo -e "INFO: Creating data dir start."
 	for i in `seq ${COCKROACH_NUM}`; do
 		mkdir -p ${DATA_DIR}/${RESOURCE_NAME}-${i}
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: mkdir -p ${DATA_DIR}/${RESOURCE_NAME}-${i} failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
@@ -320,7 +320,7 @@ create() {
 						${SECURE_FLAG} \
 						--join=${RESOURCE_NAME}-1,${RESOURCE_NAME}-2,${RESOURCE_NAME}-3 \
 						${LOCALITY_FLAG}
-					if [ $? != 0 ]; then
+					if [ $? -ne 0 ]; then
 						echo -e "ERROR: docker run -d --name=${RESOURCE_NAME}-${COUNT}... (First cockroach) failed.\n" 1>&2
 						echo -e "       *** Please check the status of each container by \"docker container ls -a\" command. " 1>&2
 						echo -e "       *** If there are any failed container, please kill and remove them manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
@@ -344,7 +344,7 @@ create() {
 							--host=${RESOURCE_NAME}-1:26257
 						# Wait for 3 second just in case, for waiting cluster initialization fihish.
 						sleep 3
-						if [ $? != 0 ]; then
+						if [ $? -ne 0 ]; then
 							echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach init ... failed." 1>&2
 							RETURN=1
 							exit ${RETURN}
@@ -366,7 +366,7 @@ create() {
 						${SECURE_FLAG} \
 						--join=${RESOURCE_NAME}-1,${RESOURCE_NAME}-2,${RESOURCE_NAME}-3 \
 						${LOCALITY_FLAG}
-					if [ $? != 0 ]; then
+					if [ $? -ne 0 ]; then
 						echo -e "ERROR: docker run -d --name=${RESOURCE_NAME}-${COUNT}... (Second and later cockroaches) failed.\n" 1>&2
 						echo -e "       *** Please check the status of each container by \"docker container ls -a\" command. " 1>&2
 						echo -e "       *** If there are any failed container, please kill and remove them manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
@@ -399,21 +399,21 @@ create() {
 	# Create status file. It includes "Running" and ${COCKROACH_NUM}.
 	# The information of ${COCKROACH_NUM} will be used in the delete processes.
 	touch ${STATUS_FILE}
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: touch ${STATUS_FILE} failed. (In the create process)" 1>&2
 		RETURN=1
 		exit ${RETURN}
 	fi
 
 	echo -e "Running" > ${STATUS_FILE}
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: echo -e \"Running\" > ${STATUS_FILE} failed." 1>&2
 		RETURN=1
 		exit ${RETURN}
 	fi
 
 	echo -e ${COCKROACH_NUM} >> ${STATUS_FILE}
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: echo -e ${COCKROACH_NUM} >> ${STATUS_FILE} failed." 1>&2
 		RETURN=1
 		exit ${RETURN}
@@ -434,7 +434,7 @@ create() {
 			${SECURE_FLAG} \
 			--host=${RESOURCE_NAME}-1:26257 \
 			-e "CREATE USER IF NOT EXISTS ${NON_ROOT_USER_NAME}"
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach sql ... -e \"CREATE USER IF NOT EXISTS ${NON_ROOT_USER_NAME}\" failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
@@ -447,7 +447,7 @@ create() {
 			${SECURE_FLAG} \
 			--host=${RESOURCE_NAME}-1:26257 \
 			-e "CREATE USER IF NOT EXISTS ${NON_ROOT_USER_NAME} WITH PASSWORD '${NON_ROOT_USER_PASSWORD}'"
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach sql ... -e \"CREATE USER IF NOT EXISTS ${NON_ROOT_USER_NAME} WITH PASSWORD '${NON_ROOT_USER_PASSWORD}'\" failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
@@ -462,7 +462,7 @@ create() {
 		./cockroach node status \
 		${SECURE_FLAG} \
 		--host=${RESOURCE_NAME}-1:26257
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach node status... failed." 1>&2
 		RETURN=1
 		exit ${RETURN}
@@ -486,7 +486,7 @@ create() {
 		docker exec ${RESOURCE_NAME}-client \
 			./cockroach workload init intro \
 			"postgresql://root@${RESOURCE_NAME}-1:26257?sslmode=disable"
-			if [ $? != 0 ]; then
+			if [ $? -ne 0 ]; then
 			echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach workload init intro... failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
@@ -496,7 +496,7 @@ create() {
 		docker exec ${RESOURCE_NAME}-client \
 			./cockroach workload init intro \
 			"postgresql://root@${RESOURCE_NAME}-1:26257?sslcert=certs%2Fclient.root.crt&sslkey=certs%2Fclient.root.key&sslmode=verify-full&sslrootcert=certs%2Fca.crt"
-			if [ $? != 0 ]; then
+			if [ $? -ne 0 ]; then
 			echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach workload init intro... failed." 1>&2
 			RETURN=1
 			exit ${RETURN}
@@ -511,7 +511,7 @@ create() {
 		${SECURE_FLAG} \
 		--host=${RESOURCE_NAME}-1:26257 \
 		-e "SELECT v as \"Hello, CockroachDB!\" FROM intro.mytable WHERE (l % 2) = 0"
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach sql ... -e \"SELECT v as \"Hello, CockroachDB!\" FROM intro.mytable WHERE (l % 2) = 0\" failed." 1>&2
 		RETURN=1
 		exit ${RETURN}
@@ -647,7 +647,7 @@ delete() {
 	# So, this script use "docker kill" instead of "docker stop".
 	for i in `seq ${COCKROACH_NUM}`; do
 		docker kill ${RESOURCE_NAME}-${i}
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: docker kill ${RESOURCE_NAME}-${i} failed." 1>&2
 			echo -e "       *** Please check the status of each container by \"docker container ls -a\" command. " 1>&2
 			echo -e "       *** If there are any failed container, please kill and remove them manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
@@ -663,7 +663,7 @@ delete() {
 	# Remove stopped containers.
 	for i in `seq ${COCKROACH_NUM}`; do
 		docker rm ${RESOURCE_NAME}-${i}
-		if [ $? != 0 ]; then
+		if [ $? -ne 0 ]; then
 			echo -e "ERROR: docker rm ${RESOURCE_NAME}-${i} failed." 1>&2
 			echo -e "       *** Please check the status of each container by \"docker container ls -a\" command. " 1>&2
 			echo -e "       *** If there are any failed container, please kill and remove them manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
@@ -678,7 +678,7 @@ delete() {
 
 	# Kill and remove client container.
 	docker kill ${RESOURCE_NAME}-client
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: docker kill ${RESOURCE_NAME}-client failed." 1>&2
 		echo -e "       *** Please check the status of each container by \"docker container ls -a\" command. " 1>&2
 		echo -e "       *** If there are any failed container, please kill and remove it manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
@@ -689,7 +689,7 @@ delete() {
 	fi
 
 	docker rm ${RESOURCE_NAME}-client
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: docker rm ${RESOURCE_NAME}-client failed." 1>&2
 		echo -e "       *** Please check the status of each container by \"docker container ls -a\" command. " 1>&2
 		echo -e "       *** If there are any failed container, please kill and remove it manually by \"docker kill\" and \"docker rm\" command.\n" 1>&2
@@ -701,7 +701,7 @@ delete() {
 
 	# Remove docker network.
 	docker network rm ${RESOURCE_NAME}-net
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: docker network rm ${RESOURCE_NAME}-net failed." 1>&2
 		echo -e "       *** Please check the status of docker network by \"docker network ls\" command. " 1>&2
 		echo -e "       *** If does the \"${RESOURCE_NAME}-net\" exist, please remove it manually by \"docker network rm\" command.\n" 1>&2
@@ -713,14 +713,14 @@ delete() {
 
 	# Create status file that includes information about deleteing cluster done.
 	touch ${STATUS_FILE}
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: touch ${STATUS_FILE} failed." 1>&2
 		RETURN=1
 		exit ${RETURN}
 	fi
 
 	echo -e "Deleted" > ${STATUS_FILE}
-	if [ $? != 0 ]; then
+	if [ $? -ne 0 ]; then
 		echo -e "ERROR: echo -e \"Deleted\" > ${STATUS_FILE} failed." 1>&2
 		RETURN=1
 		exit ${RETURN}
