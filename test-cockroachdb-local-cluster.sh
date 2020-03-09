@@ -370,7 +370,7 @@ echo -e "\n\n\n\n###### CREATE and DELETE test (Secure cluster) ######"
 	${SCRIPT} ${INPUT}
 	if [ $? = ${OUTPUT} ]; then
 		NODE_NUM=$(docker exec ${RESOURCE_NAME}-client ./cockroach sql --certs-dir=certs --host=cockroach-1:26257 -e "SELECT count(*) FROM crdb_internal.gossip_nodes" | tail -n 1)
-		if [ ${NODE_NUM} != 3 ]; then
+		if [ ${NODE_NUM} -ne 3 ]; then
 			FAIL_COUNT=$(expr ${FAIL_COUUNT} + 1)
 			echo -e "\n###### Test No. ${TEST_NO} failed." 1>&2
 			echo -e "Failed test's INPUT is ${INPUT}." 1>&2
@@ -418,7 +418,7 @@ echo -e "\n\n\n\n###### CREATE and DELETE test (Secure cluster) ######"
 		${SCRIPT} ${INPUT}
 		if [ $? = ${OUTPUT} ]; then
 			NODE_NUM=$(docker exec ${RESOURCE_NAME}-client ./cockroach sql --certs-dir=certs --host=cockroach-1:26257 -e "SELECT count(*) FROM crdb_internal.gossip_nodes" | tail -n 1)
-			if [ ${NODE_NUM} != ${i} ]; then
+			if [ ${NODE_NUM} -ne ${i} ]; then
 				FAIL_COUNT=$(expr ${FAIL_COUUNT} + 1)
 				echo -e "\n###### Test No. ${TEST_NO} failed." 1>&2
 				echo -e "Failed test's INPUT is ${INPUT}." 1>&2
@@ -473,7 +473,7 @@ echo -e "\n\n\n\n###### CREATE and DELETE test (Insecure Cluster) ######"
 	${SCRIPT} ${INPUT}
 	if [ $? = ${OUTPUT} ]; then
 		NODE_NUM=$(docker exec ${RESOURCE_NAME}-client ./cockroach sql --insecure --host=cockroach-1:26257 -e "SELECT count(*) FROM crdb_internal.gossip_nodes" | tail -n 1)
-		if [ ${NODE_NUM} != 3 ]; then
+		if [ ${NODE_NUM} -ne 3 ]; then
 			FAIL_COUNT=$(expr ${FAIL_COUUNT} + 1)
 			echo -e "\n###### Test No. ${TEST_NO} failed." 1>&2
 			echo -e "Failed test's INPUT is ${INPUT}." 1>&2
@@ -521,7 +521,7 @@ echo -e "\n\n\n\n###### CREATE and DELETE test (Insecure Cluster) ######"
 		${SCRIPT} ${INPUT}
 		if [ $? = ${OUTPUT} ]; then
 			NODE_NUM=$(docker exec ${RESOURCE_NAME}-client ./cockroach sql --insecure --host=cockroach-1:26257 -e "SELECT count(*) FROM crdb_internal.gossip_nodes" | tail -n 1)
-			if [ ${NODE_NUM} != ${i} ]; then
+			if [ ${NODE_NUM} -ne ${i} ]; then
 				FAIL_COUNT=$(expr ${FAIL_COUUNT} + 1)
 				echo -e "\n###### Test No. ${TEST_NO} failed." 1>&2
 				echo -e "Failed test's INPUT is ${INPUT}." 1>&2
@@ -679,7 +679,7 @@ echo -e "\n${SUCCESS_COUNT} / ${TEST_NO} test succeeded."
 echo -e "${FAIL_COUNT} / ${TEST_NO} test failed."
 
 # If some test failed, return 1.
-if [ ${FAIL_COUNT} != 0 ]; then
+if [ ${FAIL_COUNT} -ne 0 ]; then
 	echo -e "\nSome test failed.\n"
 	exit 1
 else
