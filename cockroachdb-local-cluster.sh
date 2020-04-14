@@ -4,7 +4,7 @@
 
 # Variables
 # Version of CockroachDB.
-VERSION="v19.2.5"
+VERSION="v19.2.6"
 
 # Docker Image of CockroachDB.
 IMAGE="cockroachdb/cockroach"
