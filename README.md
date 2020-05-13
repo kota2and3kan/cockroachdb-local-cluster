@@ -1,4 +1,5 @@
 # cockroachdb-local-cluster
+![Test of cockroachdb-local-cluster.sh](https://github.com/kota2and3kan/cockroachdb-local-cluster/workflows/Test%20of%20cockroachdb-local-cluster.sh/badge.svg)
 Bash script that creates or deletes CockroachDB Local Cluster by using Docker.  
 This script deploys the swarm of cockroaches on your local environment with Docker.
 
