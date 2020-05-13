@@ -1,4 +1,4 @@
-name: Test of cockroachdb-local-cluster.sh.
+name: Test of cockroachdb-local-cluster.sh
 on:
   push:
     branches:
