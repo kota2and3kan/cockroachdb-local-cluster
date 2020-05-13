@@ -1,14 +1,18 @@
 name: Test of cockroachdb-local-cluster.sh
+
 on:
   push:
     branches:
     - master
+
 jobs:
   run-test-script:
     runs-on: ubuntu-18.04
     steps:
+
     - uses: actions/checkout@v2
       with:
         ref: master
-    - name: Run test script.
+
+    - name: Run test script
       run: sudo ./test-cockroachdb-local-cluster.sh
