@@ -329,8 +329,8 @@ create() {
 						RETURN=1
 						exit ${RETURN}
 					fi
-					# Wait for 2 second just in case, for waiting first node start before init cluster.
-					sleep 2
+					# Wait for 1 second just in case, for waiting first node start before init cluster.
+					sleep 1
 					# Init CockroachDB Cluster.
 					# For sorting internal IDs of each cockroach in ascending order, we init cluster after first node run..
 					# And, after that, we will run the second and later cockroaches.
@@ -342,8 +342,6 @@ create() {
 							./cockroach init \
 							${SECURE_FLAG} \
 							--host=${RESOURCE_NAME}-1:26257
-						# Wait for 3 second just in case, for waiting cluster initialization fihish.
-						sleep 3
 						if [ $? -ne 0 ]; then
 							echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach init ... failed." 1>&2
 							RETURN=1
@@ -379,8 +377,6 @@ create() {
 						exit ${RETURN}
 					fi
 				fi
-				# Wait for 3 second just in case, for sorting internal IDs of each cockroach in ascending order.
-				sleep 3
 				# Increase loop counter.
 				COUNT=$(expr ${COUNT} + 1)
 				# Increase the number of HTTP port.
@@ -418,8 +414,8 @@ create() {
 	# Wait for the CockroachDB will be ready to accept connections.
 	echo -e "INFO: Waiting for CockroachDB is ready to acccept connections."
 	for i in `seq 10`; do
-		sleep 3
-		# Even if try to connect to DB 10 times (even if waiting about 30 second), if the DB will not be ready to accept connections, exit this script with return value 1.
+		sleep 1
+		# Even if try to connect to DB 10 times (even if waiting about 10 second), if the DB will not be ready to accept connections, exit this script with return value 1.
 		if [ ${i} -eq 10 ]; then
 			echo -e "ERROR: CockroachDB was NOT ready to accept connections, even if try to connect to DB 10 times (even if waiting about 30 second)." 1>&2
 			echo -e "HINT: There is possibility that some error occurred. Please check the DB or Container log." 1>&2
