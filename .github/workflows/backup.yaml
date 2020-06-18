@@ -1,0 +1,19 @@
+name: Backup repository from GitHub to GitLab
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  backup-to-gitlab:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Backup
+      run: |
+        mkdir -p $GITHUB_ACTOR
+        cd $GITHUB_ACTOR
+        git clone https://$GITHUB_ACTOR:${{ secrets.GITLAB_TOKEN }}@gitlab.com/$GITHUB_REPOSITORY.git
+        cd ../$GITHUB_REPOSITORY
+        git pull https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git
+        git push https://$GITHUB_ACTOR:${{ secrets.GITLAB_TOKEN }}@gitlab.com/$GITHUB_REPOSITORY.git master
