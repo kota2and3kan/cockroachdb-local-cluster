@@ -35,6 +35,9 @@ HTTP_PORT=8081
 NON_ROOT_USER_NAME="cockroach"
 NON_ROOT_USER_PASSWORD="cockroach"
 
+# Password of root user (if it is the Secure Cluster).
+ROOT_USER_PASSWORD="cockroachroot"
+
 # Counter for loop process that execute "docker run". It will start cockroaches.
 COUNT=1
 
@@ -474,6 +477,25 @@ create() {
 	echo -e "Creating non-root user for access DB and Web UI done."
 
 
+	# If it is the Secure Cluster, set root user's password.
+	# If it is the Insecure Cluster, we don't need to set password of root user, because the authentication is not needed for access Web UI.
+	# Use "--certs-dir" flag, if the cluster is Secure Cluster.
+	echo -e "INFO: Set root user's password for access Web UI start."
+	if [ ${INSECURE} -eq 0 ]; then
+		docker exec ${RESOURCE_NAME}-client \
+			./cockroach sql \
+			${SECURE_FLAG} \
+			--host=${RESOURCE_NAME}-1:26257 \
+			-e "ALTER USER root WITH PASSWORD '${ROOT_USER_PASSWORD}'"
+		if [ $? -ne 0 ]; then
+			echo -e "ERROR: docker exec ${RESOURCE_NAME}-client ./cockroach sql ... -e \"ALTER USER root WITH PASSWORD '${ROOT_USER_PASSWORD}'\" failed." 1>&2
+			RETURN=1
+			exit ${RETURN}
+		fi
+	fi
+	echo -e "Set root user's password for access Web UI done."
+
+
 	# Confirm the cluster status.
 	echo -e "INFO: CockroachDB Cluster Status is the following."
 	docker exec -t ${RESOURCE_NAME}-client \
@@ -574,8 +596,11 @@ create() {
 		# echo -e "      or"
 		# echo -e "    sudo docker exec -it ${RESOURCE_NAME}-client ./cockroach sql --url=\"postgresql://${NON_ROOT_USER_NAME}:${NON_ROOT_USER_PASSWORD}@${RESOURCE_NAME}-1:26257/defaultdb?sslmode=require\""
 
+		# The way to access Web UI as a root user.
+		echo -e "\n  Access Web UI as a root user (user name: root / password: ${ROOT_USER_PASSWORD}):"
+		echo -e "    URL: https://${HTTP_IP}:$(expr ${HTTP_PORT} - ${COCKROACH_NUM})/"
+
 		# The way to access Web UI as a non-root user.
-		# If it is a Secure Cluster, you cannot access Web UI as a root, you need access as a non-root user with password authentication.
 		echo -e "\n  Access Web UI as a non-root user (user name: ${NON_ROOT_USER_NAME} / password: ${NON_ROOT_USER_PASSWORD}):"
 		echo -e "    URL: https://${HTTP_IP}:$(expr ${HTTP_PORT} - ${COCKROACH_NUM})/"
 	fi
