@@ -11,7 +11,7 @@ WORK_DIR_RELATIVE_PATH="cockroach-cluster"
 WORK_DIR_ABSOLUTE_PATH="${PWD}/${WORK_DIR_RELATIVE_PATH}"
 STATUS_FILE="${WORK_DIR_RELATIVE_PATH}/cluster-status"
 IMAGE="cockroachdb/cockroach"
-VERSION="v19.2.2"
+VERSION="v21.2.0"
 
 # Count the test number.
 TEST_NO=0
