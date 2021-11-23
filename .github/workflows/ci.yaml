@@ -4,15 +4,23 @@ on:
   push:
     branches:
     - master
+  pull_request:
+    branches:
+    - master
 
 jobs:
   run-test-script:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-
-    - uses: actions/checkout@v2
+    - name: checkout-push-master
+      if: github.event_name == 'push'
+      uses: actions/checkout@v2
       with:
         ref: master
-
+    - name: checkout-pull-request
+      if: "contains(github.event_name, 'pull_request')"
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
     - name: Run test script
       run: sudo ./test-cockroachdb-local-cluster.sh
