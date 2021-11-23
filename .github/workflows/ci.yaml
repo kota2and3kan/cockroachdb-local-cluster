@@ -10,7 +10,7 @@ on:
 
 jobs:
   run-test-script:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
     - name: checkout-push-master
       if: github.event_name == 'push'
